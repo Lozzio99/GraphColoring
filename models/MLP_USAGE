@@ -1,0 +1,54 @@
+NEURALNETWORK CLASS IMPLEMENTATION AND TRAINING MODE USAGE
+
+
+TRAINING MODE USAGE
+
+CONFIGURATION TRAINING_MODE_ENABLED
+    will run all graphs sequentially,
+    for each graph an array with basic features is stored
+    linked to the performance of the best algorithm executed
+        At the end of the graphs iteration the stored results will be
+        randomly be processed to feed the MLP and train it on them.
+
+
+CONFIGURATION MLP_RESET
+    will restart the MLP with randomised weights
+    WARNING : the progresses will be replaced with random values
+    WARNING : if changes are made in the config NUMBER_OF_HIDDEN or
+            NUMBER_OF_OUTPUT or NUMBER_OF_FEATURES it's necessary to set
+            MLP_RESET to be true,in order to export / load an mlp created
+            with the selected dimensions. * Matrix class will return null
+            due to the un-matching dimensions *
+
+
+CONFIGURATION VERBOSE
+    will output the most relevant infos about the execution-training
+
+
+
+MULTILAYERED PERCEPTRON
+    Create a new NeuralNetwork object with given number of nodes for
+        -Input layer
+        -Hidden layers (2)
+        -Output layer
+            Biases are automatically added with the given dimensions
+
+    Methods
+        train(input, target)
+            -generate output
+                compare to target
+                    correct weights based on the error (cost)
+
+        feedforward(input)
+            -generate output (prediction)
+
+MATRIX AND DATA LIBRARY
+
+Matrix class : class to perform basic linear algebra operations
+               contains some methods for different activation functions
+
+Data class   : class to generate sample tests input /output for the MLP
+
+Export model : class to import/export a serializable object class * refer
+                to MLP_USAGE section *
+
