@@ -12,7 +12,6 @@ import java.util.ArrayList;
 
 public class Trainer
 {
-    private static NeuralNetwork nn;
     private static ArrayList<Matrix> in = new ArrayList<>();
     private static ArrayList<double []> test = new ArrayList<>();
     private static ArrayList<Matrix> out = new ArrayList<>();
@@ -28,6 +27,7 @@ public class Trainer
             Main.factory.getGraphRepository().getNeuralNetwork().feedforward(test.get(i)).printMatrix();
             System.out.println("//------------------------//");
         }
+        Main.factory.getGraphRepository().getTrainer().writeForNextTraining();
     }
     public void read() throws IOException
     {

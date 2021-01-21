@@ -18,8 +18,8 @@ public class PersonalTrainer
 {
     private ArrayList<double []> features;
     private ArrayList<Performance> performances;
-    private Matrix[] MLP_INPUT;
-    private Matrix[] MLP_OUTPUT;
+    private static Matrix[] MLP_INPUT;
+    private static Matrix[] MLP_OUTPUT;
 
     public PersonalTrainer()
     {
@@ -138,7 +138,6 @@ public class PersonalTrainer
             for (int i = 0; i< this.features.size(); i++)
             {
 
-                myFw.write("---------------");
                 myFw.write(" graph "+ (i+1)+"\n");
                 myFw.write(Arrays.toString(this.features.get(i)));
                 // System.out.println(this.TRAINING_PERFORMANCE.get(i).BEST_ALGORITHM);
@@ -147,6 +146,7 @@ public class PersonalTrainer
                 myFw.write("prediction :\n");
                 myFw.write(Main.factory.getGraphRepository().getNeuralNetwork().feedforward(this.features.get(i)).getPrintMatrix());
                 myFw.write("\n ---------------\n");
+                myFw.write("---------------");
             }
             myFw.close();
         }
