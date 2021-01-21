@@ -1,4 +1,4 @@
-package graph.selection.MLP;
+package graph.selection.MLP.utils;
 
 import graph.enums.Algorithm;
 

@@ -29,10 +29,13 @@ public class Main {
             {
                 Main.factory.getGraphRepository().reset();
 
-                if (!Configuration.TRAINING_MODE_ENABLED)
-                    Main.factory.getGraphRepository().getWatch().start(Configuration.DEFAULT_TIMELIMIT);
-                else
+                if (Configuration.TRAINING_MODE_ENABLED)
+                {
                     Main.factory.getGraphRepository().getWatch().start(Configuration.TRAINING_TIMELIMIT);
+
+                }
+                else
+                    Main.factory.getGraphRepository().getWatch().start(Configuration.DEFAULT_TIMELIMIT);
                 String tempFile = inputfile.replace("XXXX", String.format("%02d", i));
 
                 System.out.println(String.format("Loading: %s ...", tempFile));
@@ -72,7 +75,7 @@ public class Main {
             }
             if (Configuration.TRAINING_MODE_ENABLED)
             {
-                Main.factory.getGraphRepository().trainMLP();
+                Main.factory.getGraphRepository().getTrainer().executeTraining();
             }
 
 

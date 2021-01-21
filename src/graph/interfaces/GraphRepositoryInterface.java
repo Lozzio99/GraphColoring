@@ -5,19 +5,17 @@ import graph.enums.Algorithm;
 import graph.enums.GraphType;
 import graph.enums.LowerBound;
 import graph.enums.UpperBound;
-import graph.selection.GraphFeatures;
-import graph.selection.MLP.Performance;
+import graph.features.GraphFeatures;
+import graph.selection.MLP.controls.NeuralNetwork;
+import graph.selection.MLP.utils.PersonalTrainer;
 import graph.utils.StopWatch;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 public interface GraphRepositoryInterface {
     Integer getUpperBound();
 
     GraphFeatures features();
-
-    void setFeatures(ArrayList<double[]> features);
 
     void setUpperBound(Integer upperBound);
 
@@ -81,12 +79,6 @@ public interface GraphRepositoryInterface {
 
     void setGraphFeatures(double[] features);
 
-    void addPerformance(double [] features, Performance performance);
-
-    ArrayList<Performance> getPerformance();
-
-    ArrayList<double[]> getFeatures();
-
     Double getBest_time ();
 
     void setBest_time (double time);
@@ -95,21 +87,12 @@ public interface GraphRepositoryInterface {
 
     void setBest_chromatic (int chromatic);
 
-    void trainMLP();
-
-    void normalizeTRAINING();
-
-    double [][] getMLP_GUESS();
-
     Algorithm getBestAlgorithm();
 
     void setBestAlgorithm(Algorithm bestAlgorithm);
 
-    void normalizePREDICTION(double [] input);
+    NeuralNetwork getNeuralNetwork();
 
-    double [] getMLP_INPUT();
+    PersonalTrainer getTrainer();
 
-    void normalization(double[] m, double[] normalized);
-
-    double normalize(double x, double max, double min);
 }

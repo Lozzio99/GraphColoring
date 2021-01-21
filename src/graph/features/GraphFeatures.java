@@ -1,4 +1,4 @@
-package graph.selection;
+package graph.features;
 
 import graph.Configuration;
 import graph.Main;
@@ -40,7 +40,7 @@ public class GraphFeatures
         this.density = (double)(2 * Main.factory.getGraphRepository().getEdgeCount()) / (double) (Main.factory.getGraphRepository().getVertexCount() * (Main.factory.getGraphRepository().getVertexCount() - 1));
         calculateLocalClustering();
         calculateGlobalClustering();
-        setINPUT_TO_GIVE_MLP();
+        setGraphFeatures();
     }
     public void checkMax()
     {
@@ -125,23 +125,10 @@ public class GraphFeatures
         openedTriplets = openedTriplets/3;
         this.globalClusteringCoefficient = closedTriplets/(double)(openedTriplets+closedTriplets);
     }
-    public void setINPUT_TO_GIVE_MLP()
+    public void setGraphFeatures()
     {
         double [] input = new double[13];
-        double [] toNormalize = new double [8];
-
         input = setFeatures(13);
-        double [] c = new double[9];
-        System.arraycopy(input,0,c,0,9);
-        toNormalize = setFeatures(9);
-
-        input [9] = this.localClusteringCoefficient[Main.factory.getGraphRepository().getMaximumDegree()];
-        input [10] = this.averageClustingCoefficient;
-        input [11] = Main.factory.getGraphRepository().getVertexCount()/(double)Main.factory.getGraphRepository().getEdgeCount();
-        input [12] = Main.factory.getGraphRepository().getEdgeCount()/(double)Main.factory.getGraphRepository().getVertexCount();
-
-
-
         if (Configuration.VERBOSE)
         {
             System.out.println("\n Graph features : \n" + " //_______________________________//\n"+
@@ -161,11 +148,9 @@ public class GraphFeatures
         }
 
         Main.factory.getGraphRepository().setGraphFeatures(input);
-        Main.factory.getGraphRepository().normalizePREDICTION(toNormalize);
-
     }
 
-    public static  double[] setFeatures(int length)
+    public  double[] setFeatures(int length)
     {
         double[] i = new double [length];
         i [0] = Main.factory.getGraphRepository().getVertexCount();
@@ -177,6 +162,10 @@ public class GraphFeatures
         i [6] = Main.factory.getGraphRepository().features().avgDegree;
         i [7] = Main.factory.getGraphRepository().features().density;
         i [8] = Main.factory.getGraphRepository().features().globalClusteringCoefficient;
+        i [9] = this.localClusteringCoefficient[Main.factory.getGraphRepository().getMaximumDegree()];
+        i [10] = this.averageClustingCoefficient;
+        i [11] = Main.factory.getGraphRepository().getVertexCount()/(double)Main.factory.getGraphRepository().getEdgeCount();
+        i [12] = Main.factory.getGraphRepository().getEdgeCount()/(double)Main.factory.getGraphRepository().getVertexCount();
         return i ;
     }
 

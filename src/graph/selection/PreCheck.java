@@ -7,10 +7,10 @@ import graph.enums.Algorithm;
 import graph.enums.GraphType;
 import graph.algorithms.BackTracking.BTChromaticNumber;
 import graph.enums.UpperBound;
-import graph.selection.MLP.Performance;
+import graph.selection.MLP.utils.Performance;
 import graph.enums.LowerBound;
-
-import javax.swing.*;
+import graph.selection.MLP.utils.PersonalTrainer;
+import graph.selection.MLP.utils.Prediction;
 
 public class PreCheck
 {
@@ -113,7 +113,7 @@ public class PreCheck
                 }
                 else   //training mode disabled
                 {
-                    double [][] algorithm_guessed = Main.factory.getGraphRepository().getMLP_GUESS();
+                    double [][] algorithm_guessed = new Prediction().prediction(PersonalTrainer.normalization(Main.factory.getGraphRepository().getGraphFeatures())).getMatrix();
                     if (algorithm_guessed[0][0] > 0.5)
                         Main.factory.getGraphRepository().setChosenAlgorithm(Algorithm.GREEDY);
                     else if (algorithm_guessed[1][0] > 0.5)
@@ -160,7 +160,7 @@ public class PreCheck
         if (Main.factory.getGraphRepository().getChromaticNumber()==null || Main.factory.getGraphRepository().getBest_chromatic()<Main.factory.getGraphRepository().getChromaticNumber())
             Main.factory.getGraphRepository().setChromaticNumber(Main.factory.getGraphRepository().getBest_chromatic());
 
-        Main.factory.getGraphRepository().addPerformance(Main.factory.getGraphRepository().getGraphFeatures(),new Performance(Main.factory.getGraphRepository().getBest_time(), Main.factory.getGraphRepository().getBest_chromatic(),Main.factory.getGraphRepository().getBestAlgorithm()));
+        Main.factory.getGraphRepository().getTrainer().addLinkedPerformance(Main.factory.getGraphRepository().getGraphFeatures(),new Performance(Main.factory.getGraphRepository().getBest_time(), Main.factory.getGraphRepository().getBest_chromatic(),Main.factory.getGraphRepository().getBestAlgorithm()));
     }
     private static boolean isGraphType() {
         if (Main.factory.getGraphRepository().getGraphType() != null) {
