@@ -31,9 +31,7 @@ public class Trainer
     }
     public void read() throws IOException
     {
-        //TODO: change path to the file TRAINING
-
-        String fileName = "C:\\Users\\Lorenzo\\Documents\\GraphColoring\\models\\TRAINING.txt";
+        String fileName = String.format("%s/TRAINING.txt", Configuration.MODEL_PATH);
         File file = new File(fileName);
         FileReader fr = null;
         try {

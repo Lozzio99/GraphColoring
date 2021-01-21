@@ -5,7 +5,7 @@ import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 
 public class StopWatch {
-    public static final long TIMELIMIT = 12000;
+    public static final long TIMELIMIT = 120000;
     public static final long TRAINING_TIME = 5 * TIMELIMIT;   //5 algorithms tested
     public static final long LOWER_BOUND_TIMELIMIT = 10000;
     public static final long UPPER_BOUND_TIMELIMIT = 10000;
