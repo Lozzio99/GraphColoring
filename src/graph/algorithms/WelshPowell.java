@@ -137,7 +137,11 @@ public class WelshPowell {
         int chromaticNumber = 0;
         try {
             chromaticNumber = welshPowell.chromatic();
-            System.out.println(chromaticNumber);
+            if (Configuration.VERBOSE)
+            {
+                System.out.print("Welsh Powell lower bound : ");
+                System.out.println(chromaticNumber);
+            }
             Main.factory.getGraphRepository().setUpperBound(chromaticNumber);
         } catch (TimelimitExceededException e) {
             Main.factory.getGraphRepository().setUpperBound(e.getValue());

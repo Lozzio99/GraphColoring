@@ -12,7 +12,8 @@ import java.io.*;
 public class ImportTask {
     public final static String COMMENT = "//";
 
-    public static boolean execute(String fileName) throws IOException, TimelimitExceededException {
+    public static boolean execute(String fileName) throws IOException, TimelimitExceededException
+    {
         ProgressBar progressBar = new ProgressBar();
 
         int n = -1;

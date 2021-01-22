@@ -88,12 +88,7 @@ public class Greedy {
             Greedy greedy = new Greedy(Main.factory.getGraphRepository().getAdjacentMatrix(), Main.factory.getGraphRepository().getVertexCount());
             int chrom = greedy.chromatic();
             double end = Duration.between(start,Instant.now()).toNanos();
-            if (Configuration.VERBOSE)
-            {
-                System.out.print("Greedy : "+chrom );
-                //System.out.print(" valid coloring : "+ isValidColoring());
-                System.out.println("  > "+end);
-            }
+
             if (Configuration.TRAINING_MODE_ENABLED )
             {
                 if (  Main.factory.getGraphRepository().getBest_chromatic() == null || chrom < Main.factory.getGraphRepository().getBest_chromatic())
@@ -114,10 +109,20 @@ public class Greedy {
             if (Configuration.DEFAULT_UPPER_BOUND.equals(UpperBound.GREEDY) )
             {
                 Main.factory.getGraphRepository().setUpperBound(chrom);
+                if (Configuration.VERBOSE)
+                {
+                    System.out.print("Greedy upper bound : "+chrom );
+                    //System.out.print(" valid coloring : "+ isValidColoring());
+                }
             }
             else if (Main.factory.getGraphRepository().getChosenAlgorithm().equals(Algorithm.GREEDY))
             {
                 Main.factory.getGraphRepository().setChromaticNumber(chrom);
+                if (Configuration.VERBOSE)
+                {
+                    System.out.print("Greedy : "+chrom );
+                    System.out.println("  > "+end);
+                }
             }
 
         } catch (TimelimitExceededException e) {

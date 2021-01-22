@@ -84,12 +84,15 @@ public class Tomita
             size = max.maxSize;
         } catch (TimelimitExceededException e) {
             size = e.getValue();
-
             if(Configuration.isDebugging()) {
                 e.printStackTrace();
             }
         }
-
+        if (Configuration.VERBOSE)
+        {
+            System.out.print("Tomita's max clique lower bound : ");
+            System.out.println(size);
+        }
         Main.factory.getGraphRepository().setLowerBound(size);
         Main.factory.getGraphRepository().getWatch().terminiateIntermediateDeadline();
     }

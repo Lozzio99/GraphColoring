@@ -20,8 +20,8 @@ public class Configuration
     public static boolean VERBOSE = false;
     public static boolean TRAINING_MODE_ENABLED = true;
     public static String MODEL_PATH = System.getProperty("user.dir") + "/models";
-    public static boolean MLP_RESET = true;
-    public static boolean FEATURE_RESET = true;
+    public static boolean MLP_RESET = false;
+    public static boolean FEATURE_RESET = false;
     public static Integer NUMBER_OF_FEATURES = 9;
     public static Integer NUMBER_OF_HIDDEN =512;
     public static Integer NUMBER_OF_OUTPUTS = 5 ;

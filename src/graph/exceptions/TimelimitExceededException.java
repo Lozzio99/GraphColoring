@@ -1,7 +1,8 @@
 package graph.exceptions;
 
 
-public class TimelimitExceededException extends Exception {
+public class TimelimitExceededException extends Exception
+{
     private int value;
 
     public TimelimitExceededException() {
@@ -13,9 +14,9 @@ public class TimelimitExceededException extends Exception {
         this.value = value;
     }
 
-    public TimelimitExceededException(String message, int value) {
+    public TimelimitExceededException(String message, int value)
+    {
         super(message);
-
         this.value = value;
     }
 

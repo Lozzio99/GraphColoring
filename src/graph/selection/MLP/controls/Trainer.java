@@ -12,10 +12,17 @@ import java.util.ArrayList;
 
 public class Trainer
 {
-    private static ArrayList<Matrix> in = new ArrayList<>();
-    private static ArrayList<double []> test = new ArrayList<>();
-    private static ArrayList<Matrix> out = new ArrayList<>();
+    private static ArrayList<Matrix> in ;
+    private static ArrayList<double []> test;
+    private static ArrayList<Matrix> out ;
 
+    public Trainer()
+    {
+        in = new ArrayList<>();
+        test = new ArrayList<>();
+        out = new ArrayList<>();
+        Controller.setup();
+    }
     public static void test()
     {
         for (int i = 0; i< test.size(); i++)

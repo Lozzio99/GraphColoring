@@ -127,8 +127,7 @@ public class GraphFeatures
     }
     public void setGraphFeatures()
     {
-        double [] input = new double[13];
-        input = setFeatures(13);
+        double [] input = setFeatures(13);
         if (Configuration.VERBOSE)
         {
             System.out.println("\n Graph features : \n" + " //_______________________________//\n"+

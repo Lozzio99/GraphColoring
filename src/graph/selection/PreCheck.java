@@ -7,10 +7,14 @@ import graph.enums.Algorithm;
 import graph.enums.GraphType;
 import graph.algorithms.BackTracking.BTChromaticNumber;
 import graph.enums.UpperBound;
+import graph.selection.MLP.controls.Trainer;
 import graph.selection.MLP.utils.Performance;
 import graph.enums.LowerBound;
 import graph.selection.MLP.utils.PersonalTrainer;
 import graph.selection.MLP.utils.Prediction;
+
+import java.util.ArrayList;
+import java.util.Arrays;
 
 public class PreCheck
 {
@@ -18,6 +22,7 @@ public class PreCheck
     public static void selectAndExecute() throws Exception
     {
         //TODO: check for sub-graphs and possibly run this process for all sub-graphs
+
 
         // training mode provides all graphs as instances
         if (!isGraphType() || Configuration.TRAINING_MODE_ENABLED)
@@ -44,13 +49,6 @@ public class PreCheck
             // training mode provides all graphs as instances
             if (!Main.factory.getGraphRepository().getUpperBound().equals(Main.factory.getGraphRepository().getLowerBound()) || Configuration.TRAINING_MODE_ENABLED)
             {
-                if (Configuration.VERBOSE)
-                {
-                    System.out.println(String.format("The Lower bound is %s", Main.factory.getGraphRepository().getLowerBound()));
-                    System.out.println(String.format("The Upper bound is %s", Main.factory.getGraphRepository().getUpperBound()));
-                }
-
-
                 // each graph (features) is linked with a @Performance
                 // training mode evaluates all algorithms sequentially
                 // stores for each instance the @BestChromatic number achieved,
@@ -113,7 +111,12 @@ public class PreCheck
                 }
                 else   //training mode disabled
                 {
+
+                    //TODO : maximum and minimum hardcopied for prediction normalization, now are standard hardcoded ones
+                    // set .normalization() to be valid also for prediction and always updated
+
                     double [][] algorithm_guessed = new Prediction().prediction(PersonalTrainer.normalization(Main.factory.getGraphRepository().getGraphFeatures())).getMatrix();
+                    System.out.println(Arrays.deepToString(algorithm_guessed ));
                     if (algorithm_guessed[0][0] > 0.5)
                         Main.factory.getGraphRepository().setChosenAlgorithm(Algorithm.GREEDY);
                     else if (algorithm_guessed[1][0] > 0.5)

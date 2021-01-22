@@ -36,7 +36,7 @@ public class PersonalTrainer
     public void trainMLP()
     {
         //writeForNextTraining();
-        Controller.setup();
+
         Trainer brock = new Trainer();
         try {
             brock.read();
@@ -57,25 +57,22 @@ public class PersonalTrainer
 
     public static double[] normalization(double[] m)
     {
+        // here should go hardcopy reading of max-min features
         double normalized [] = new double [Configuration.NUMBER_OF_FEATURES];
-        normalized [0] = normalize(m[0], GraphFeatures.maxVertices,0);
-        normalized [1] = normalize(m[1],GraphFeatures.maxEdges,0);
-        normalized [2] = normalize(m[2],GraphFeatures.maxLB,0);
-        normalized [3] = normalize(m[3],GraphFeatures.maxUB,0);
-        normalized [4] = normalize(m[4],GraphFeatures.maxDegree,0);
-        normalized [5] = normalize(m[5],GraphFeatures.maxDegree,0);
-        normalized [6] = normalize(m[6],GraphFeatures.maxAverage,0);
-        normalized [7] = normalize(m[7],GraphFeatures.maxDensity,0);
-        normalized [8] = normalize(m[8],GraphFeatures.maxCLUSTER,0);
+        normalized [0] = normalize(m[0],5000,0);
+        normalized [1] = normalize(m[1],1200000,0);
+        normalized [2] = normalize(m[2],100,0);
+        normalized [3] = normalize(m[3],100,0);
+        normalized [4] = normalize(m[4],700,0);
+        normalized [5] = normalize(m[5],700,0);
+        normalized [6] = normalize(m[6],600,0);
+        normalized [7] = normalize(m[7],1,0);
+        normalized [8] = normalize(m[8],1,0);
         return normalized;
     }
 
     public static double normalize(double x, double max, double min)
     {
-        if (x == min)
-            return 0;
-        else if (x == max)
-            return 1;
         return (x/(max - min));
     }
 
@@ -86,7 +83,7 @@ public class PersonalTrainer
         for (int i = 0; i<MLP_INPUT.length; i++)
         {
             MLP_INPUT[i] = new Matrix(this.features.get(i));
-            MLP_INPUT[i].printMatrix();
+
 
             Performance k = this.getPerformances().get(i);
 
@@ -109,6 +106,14 @@ public class PersonalTrainer
             else if (k.algorithm().equals(Algorithm.BACKTRACKING))
             {
                 MLP_OUTPUT[i] = new Matrix(new double[][]{{0},{0},{0},{0},{1}});
+            }
+
+            if (Configuration.VERBOSE)
+            {
+                System.out.println("Graph : "+ (i+1)+"\nnormalized features :\n");
+                MLP_INPUT[i].printMatrix();
+                System.out.println(" best algorithm format : ");
+                MLP_OUTPUT[i].printMatrix();
             }
         }
     }
@@ -137,7 +142,6 @@ public class PersonalTrainer
             FileWriter myFw = new FileWriter(myObj,false);
             for (int i = 0; i< this.features.size(); i++)
             {
-
                 myFw.write(" graph "+ (i+1)+"\n");
                 myFw.write(Arrays.toString(this.features.get(i)));
                 // System.out.println(this.TRAINING_PERFORMANCE.get(i).BEST_ALGORITHM);
@@ -145,8 +149,8 @@ public class PersonalTrainer
                 myFw.write(MLP_OUTPUT[i].getPrintMatrix());
                 myFw.write("prediction :\n");
                 myFw.write(Main.factory.getGraphRepository().getNeuralNetwork().feedforward(this.features.get(i)).getPrintMatrix());
-                myFw.write("\n ---------------\n");
-                myFw.write("---------------");
+                myFw.write("---------------\n ");
+                myFw.write("\n---------------\n");
             }
             myFw.close();
         }

@@ -320,7 +320,6 @@ public class GraphRepository implements GraphRepositoryInterface
     }
 
 
-
     @Override
     public Algorithm getBestAlgorithm() {
         return this.bestAlgorithm;

@@ -3,6 +3,7 @@ package graph;
 import graph.exceptions.TimelimitExceededException;
 import graph.factory.LocalFactory;
 import graph.repositories.GraphRepository;
+import graph.selection.MLP.controls.Trainer;
 import graph.selection.PreCheck;
 import graph.utils.tasks.ImportTask;
 
@@ -13,6 +14,18 @@ public class Main {
 
     public static void main(String[] args)
     {
+
+        if (!Configuration.FEATURE_RESET && Configuration.TRAINING_MODE_ENABLED)
+        {
+            Trainer preExistingFeaturesTrainer = new Trainer();
+            try {
+                preExistingFeaturesTrainer.read();
+            } catch (IOException e) {
+                if (Configuration.isDebugging())
+                    e.printStackTrace();
+            }
+            preExistingFeaturesTrainer.train();
+        }
 
         if (args.length < 1) {
             System.out.println("Error! No filename selected.");
@@ -57,9 +70,14 @@ public class Main {
                     {
                         System.out.println(String.format("The Lower bound is %s", Main.factory.getGraphRepository().getLowerBound()));
                         System.out.println(String.format("The Upper bound is %s", Main.factory.getGraphRepository().getUpperBound()));
-                    }
-                    if (Main.factory.getGraphRepository().getChromaticNumber() != null) {
-                        System.out.println(String.format("The Chromatic number is %s", Main.factory.getGraphRepository().getChromaticNumber()));
+
+                        if (Main.factory.getGraphRepository().getChromaticNumber() != null)
+                        {
+                            System.out.println("The best algorithm > "+ Main.factory.getGraphRepository().getBestAlgorithm().toString());
+                            System.out.println(String.format("The Chromatic number is %s", Main.factory.getGraphRepository().getChromaticNumber()));
+                            System.out.println("Found in : "+ Main.factory.getGraphRepository().getBest_time()+ " ns.");
+                        }
+
                     }
                 } catch (Exception e) {
                     Main.factory.getGraphRepository().getWatch().terminiateIntermediateDeadline();
