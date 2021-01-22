@@ -29,14 +29,11 @@ public class PersonalTrainer
     public void executeTraining()
     {
         convertToMatrix();
-        if (Configuration.FEATURE_RESET)
-            writeForNextTraining();
+        writeForNextTraining();
         trainMLP();
     }
     public void trainMLP()
     {
-        //writeForNextTraining();
-
         Trainer brock = new Trainer();
         try {
             brock.read();

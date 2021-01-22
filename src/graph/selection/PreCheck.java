@@ -13,6 +13,8 @@ import graph.enums.LowerBound;
 import graph.selection.MLP.utils.PersonalTrainer;
 import graph.selection.MLP.utils.Prediction;
 
+import java.time.Duration;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -44,7 +46,7 @@ public class PreCheck
             if (Configuration.VERBOSE && Configuration.TRAINING_MODE_ENABLED)
                 System.out.println(" COLORING ANALYSIS ");
 
-
+            Instant start = Instant.now();
             // if upperBound is equal to lower -> take time of the greedy algorithm
             // training mode provides all graphs as instances
             if (!Main.factory.getGraphRepository().getUpperBound().equals(Main.factory.getGraphRepository().getLowerBound()) || Configuration.TRAINING_MODE_ENABLED)
@@ -116,7 +118,8 @@ public class PreCheck
                     // set .normalization() to be valid also for prediction and always updated
 
                     double [][] algorithm_guessed = new Prediction().prediction(PersonalTrainer.normalization(Main.factory.getGraphRepository().getGraphFeatures())).getMatrix();
-                    System.out.println(Arrays.deepToString(algorithm_guessed ));
+
+
                     if (algorithm_guessed[0][0] > 0.5)
                         Main.factory.getGraphRepository().setChosenAlgorithm(Algorithm.GREEDY);
                     else if (algorithm_guessed[1][0] > 0.5)
@@ -129,9 +132,9 @@ public class PreCheck
                         Main.factory.getGraphRepository().setChosenAlgorithm(Algorithm.BACKTRACKING);
                     if (Configuration.VERBOSE)
                     {
+                        System.out.println(Arrays.deepToString(algorithm_guessed ));
                         System.out.println("MLP has classified : "+ Main.factory.getGraphRepository().getChosenAlgorithm().toString());
                     }
-
                     if ( Main.factory.getGraphRepository().getChosenAlgorithm().equals(Algorithm.DSATUR)) {
                         DSatur.calculate();
                     } else if ( Main.factory.getGraphRepository().getChosenAlgorithm().equals(Algorithm.GREEDY)) {
@@ -143,11 +146,13 @@ public class PreCheck
                     } else {
                         BTChromaticNumber.calculate();
                     }
+                    Main.factory.getGraphRepository().setBest_time(Duration.between(start,Instant.now()).toNanos());
                 }
             }
             else  //training mode disabled and upper equals lower
             {
                 Main.factory.getGraphRepository().setChromaticNumber(Main.factory.getGraphRepository().getUpperBound());
+                Main.factory.getGraphRepository().setBest_time(Duration.between(start,Instant.now()).toNanos());
             }
         }
     }

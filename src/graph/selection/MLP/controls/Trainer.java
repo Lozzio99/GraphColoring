@@ -34,7 +34,6 @@ public class Trainer
             Main.factory.getGraphRepository().getNeuralNetwork().feedforward(test.get(i)).printMatrix();
             System.out.println("//------------------------//");
         }
-        Main.factory.getGraphRepository().getTrainer().writeForNextTraining();
     }
     public void read() throws IOException
     {
@@ -83,7 +82,6 @@ public class Trainer
     }
     public void train()
     {
-        //setup();
         Main.factory.getGraphRepository().getNeuralNetwork().setLearningRate(Configuration.LEARNING_CONSTANT);
         while (true)
         {

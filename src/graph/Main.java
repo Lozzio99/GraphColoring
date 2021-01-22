@@ -70,14 +70,13 @@ public class Main {
                     {
                         System.out.println(String.format("The Lower bound is %s", Main.factory.getGraphRepository().getLowerBound()));
                         System.out.println(String.format("The Upper bound is %s", Main.factory.getGraphRepository().getUpperBound()));
-
-                        if (Main.factory.getGraphRepository().getChromaticNumber() != null)
-                        {
+                    }
+                    if (Main.factory.getGraphRepository().getChromaticNumber() != null)
+                    {
+                        if (Configuration.VERBOSE)
                             System.out.println("The best algorithm > "+ Main.factory.getGraphRepository().getBestAlgorithm().toString());
-                            System.out.println(String.format("The Chromatic number is %s", Main.factory.getGraphRepository().getChromaticNumber()));
-                            System.out.println("Found in : "+ Main.factory.getGraphRepository().getBest_time()+ " ns.");
-                        }
-
+                        System.out.print(String.format("The Chromatic number is %s", Main.factory.getGraphRepository().getChromaticNumber()));
+                        System.out.println("      <  "+ Main.factory.getGraphRepository().getBest_time()+ " ns.");
                     }
                 } catch (Exception e) {
                     Main.factory.getGraphRepository().getWatch().terminiateIntermediateDeadline();

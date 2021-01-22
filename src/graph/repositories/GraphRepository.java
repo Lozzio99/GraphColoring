@@ -51,14 +51,15 @@ public class GraphRepository implements GraphRepositoryInterface
         this.watch = new StopWatch();
         features = new GraphFeatures();
         this.MLP = new NeuralNetwork(Configuration.NUMBER_OF_FEATURES,Configuration.NUMBER_OF_HIDDEN,Configuration.NUMBER_OF_OUTPUTS,Configuration.MLP_RESET);
-        if (Configuration.TRAINING_MODE_ENABLED)
+        if (Configuration.TRAINING_MODE_ENABLED && Configuration.FEATURE_RESET)
         {
             this.trainer = new PersonalTrainer();
         }
     }
 
     @Override
-    public void reset() {
+    public void reset()
+    {
         this.vertexCount = null;
         this.edgeCount = null;
         this.edges = null;
