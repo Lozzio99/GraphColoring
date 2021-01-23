@@ -37,6 +37,8 @@ public class Controller
             @Override
             public void keyTyped(KeyEvent e) {
             }
+
+
             @Override
             public void keyPressed(KeyEvent e)
             {
@@ -46,6 +48,7 @@ public class Controller
                     {
                         Main.factory.getGraphRepository().getNeuralNetwork().exportModel();
                         System.out.println("training stopped -> saved");
+                        Trainer.overwriteTraining();
                         Trainer.test();
                         System.exit(0);
                     }
@@ -54,16 +57,7 @@ public class Controller
             @Override
             public void keyReleased(KeyEvent e)
             {
-                if (Configuration.TRAINING_MODE_ENABLED)
-                {
-                    if (e.getKeyCode()==KeyEvent.VK_SPACE)
-                    {
-                        Main.factory.getGraphRepository().getNeuralNetwork().exportModel();
-                        System.out.println("training stopped -> saved");
-                        Trainer.test();
-                        System.exit(0);
-                    }
-                }
+               keyPressed(e);
             }
         };
         return k;

@@ -3,6 +3,9 @@ package graph.algorithms.BackTracking;
 import graph.Main;
 import graph.exceptions.TimelimitExceededException;
 
+import java.time.Duration;
+import java.time.Instant;
+
 public class BackTracking {
     public int [][] adjacencyMatrix;
     public int [] colours;
@@ -24,7 +27,7 @@ public class BackTracking {
         {
 
             if (Main.factory.getGraphRepository().getWatch().isExceeded()) {
-                throw new TimelimitExceededException(max);
+                throw new TimelimitExceededException(max, Duration.between(BTChromaticNumber.START, Instant.now()).toNanos());
             }
 
             if (iCanAssign(k,c))
@@ -56,7 +59,7 @@ public class BackTracking {
             }
 
             if (Main.factory.getGraphRepository().getWatch().isExceeded()) {
-                throw new TimelimitExceededException(max);
+                throw new TimelimitExceededException(max, Duration.between(BTChromaticNumber.START, Instant.now()).toNanos());
             }
         }
         return true;
@@ -73,10 +76,6 @@ public class BackTracking {
             if (this.colours[i]>max)
             {
                 max = this.colours[i];
-            }
-
-            if (Main.factory.getGraphRepository().getWatch().isExceeded()) {
-                throw new TimelimitExceededException(max);
             }
         }
         return max;

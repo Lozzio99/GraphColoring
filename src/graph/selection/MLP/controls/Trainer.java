@@ -9,6 +9,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class Trainer
 {
@@ -88,6 +89,31 @@ public class Trainer
             //int k = new Random().nextInt(in.size());
             for (int k = 0; k< in.size(); k++)
                 Main.factory.getGraphRepository().getNeuralNetwork().train(in.get(k),out.get(k));
+        }
+    }
+    public static void overwriteTraining()
+    {
+        try
+        {
+            File myObj = new File(String.format("%s/TRAINING.txt", Configuration.MODEL_PATH));
+            FileWriter myFw = new FileWriter(myObj,false);
+            for (int i = 0; i< in.size(); i++)
+            {
+                myFw.write(" graph "+ (i+1)+"\n");
+                myFw.write(Arrays.toString(test.get(i)));
+                myFw.write("\nreal output : \n");
+                myFw.write(out.get(i).getPrintMatrix());
+                myFw.write("prediction :\n");
+                myFw.write(Main.factory.getGraphRepository().getNeuralNetwork().feedforward(test.get(i)).getPrintMatrix());
+                myFw.write("---------------\n ");
+                myFw.write("\n---------------\n");
+            }
+            myFw.close();
+        }
+        catch (IOException e)
+        {
+            if (Configuration.isDebugging())
+                e.printStackTrace();
         }
     }
 }

@@ -15,6 +15,8 @@ public class RecursiveLargeFirst
     private int chromaticNumber;
     private int max;
     private int [] colours;
+    private static Instant start;
+    private static double end;
 
     public void doAlgorithm() throws TimelimitExceededException
     {
@@ -46,6 +48,14 @@ public class RecursiveLargeFirst
             for (int k = 0; k < coloredVertexes.size(); k++){
                 if (Main.factory.getGraphRepository().getAdjacentMatrix()[currentVertex] [coloredVertexes.get(k)] == 1)
                 {
+
+                    if (Main.factory.getGraphRepository().getWatch().isExceeded()) {
+                        if (isValidColoring())
+                            throw new TimelimitExceededException(max+1,Duration.between(start,Instant.now()).toNanos());
+                        else
+                            throw new TimelimitExceededException(Integer.MAX_VALUE,Double.MAX_VALUE);
+                    }
+
                     int color = resultColoring.get(k);
                     availableColors[color] = false;
                 }
@@ -77,8 +87,12 @@ public class RecursiveLargeFirst
             if (x> max)
                 max = x;
             if (Main.factory.getGraphRepository().getWatch().isExceeded()) {
-                throw new TimelimitExceededException(max+1);
+                if (isValidColoring())
+                    throw new TimelimitExceededException(max+1,Duration.between(start,Instant.now()).toNanos());
+                else
+                    throw new TimelimitExceededException(Integer.MAX_VALUE,Double.MAX_VALUE);
             }
+
         }
         this.chromaticNumber = max+1;
 //        System.out.println(" ------- >" + this.chromaticNumber);
@@ -90,9 +104,9 @@ public class RecursiveLargeFirst
         RecursiveLargeFirst lf = new RecursiveLargeFirst();
         try
         {
-            Instant start = Instant.now();
+            start = Instant.now();
             int chrom = lf.chromatic();
-            double end = Duration.between(start,Instant.now()).toNanos();
+            end = Duration.between(start,Instant.now()).toNanos();
             Main.factory.getGraphRepository().setChromaticNumber(chrom);
             if (Configuration.VERBOSE)
             {
@@ -138,9 +152,6 @@ public class RecursiveLargeFirst
     {
         for (int i = 0; i < Main.factory.getGraphRepository().getVertexCount(); i++)
         {
-            if (Main.factory.getGraphRepository().getWatch().isExceeded()) {
-                throw new TimelimitExceededException(max+1);
-            }
             for (int k = 0; k < Main.factory.getGraphRepository().getVertexCount(); k++) {
                 if (Main.factory.getGraphRepository().getAdjacentMatrix()[i][k] == 1 && i != k && colours[i] == colours[k]) {
                     return false;

@@ -8,6 +8,8 @@ import graph.exceptions.TimelimitExceededException;
 
 import java.time.Duration;
 import java.time.Instant;
+import java.time.temporal.Temporal;
+import java.time.temporal.TemporalAdjuster;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -16,6 +18,8 @@ public class Greedy {
     private ArrayList<Integer>[] adj;
     private int[][] adjMatrix;
     private static int[] coloured;
+    private static Instant start;
+    private static double end;
 
     public Greedy(int[][] adjMatrix, int n) throws TimelimitExceededException {
         this.adjMatrix = adjMatrix;
@@ -38,10 +42,6 @@ public class Greedy {
                         available[coloured[i]] = false;
                     }
                 }
-
-                if (Main.factory.getGraphRepository().getWatch().isExceeded()) {
-                    throw new TimelimitExceededException();
-                }
             }
 
             int cr;
@@ -50,9 +50,6 @@ public class Greedy {
                     break;
                 }
 
-                if (Main.factory.getGraphRepository().getWatch().isExceeded()) {
-                    throw new TimelimitExceededException();
-                }
             }
 
             coloured[u] = cr;
@@ -71,23 +68,19 @@ public class Greedy {
             if (value > max) {
                 max = value;
             }
-
-            if (Main.factory.getGraphRepository().getWatch().isExceeded()) {
-                throw new TimelimitExceededException(max);
-            }
         }
-
         return max;
     }
 
     public static void calculate() {
         if (!Configuration.TRAINING_MODE_ENABLED && Configuration.DEFAULT_UPPER_BOUND.equals(UpperBound.GREEDY))
             Main.factory.getGraphRepository().getWatch().setIntermediateDeadline(Configuration.DEFAULT_UPPER_BOUND_TIMELIMLT);
+
         try {
-            Instant start = Instant.now();
+            start = Instant.now();
             Greedy greedy = new Greedy(Main.factory.getGraphRepository().getAdjacentMatrix(), Main.factory.getGraphRepository().getVertexCount());
             int chrom = greedy.chromatic();
-            double end = Duration.between(start,Instant.now()).toNanos();
+            end = Duration.between(start,Instant.now()).toNanos();
 
             if (Configuration.TRAINING_MODE_ENABLED )
             {
@@ -115,7 +108,7 @@ public class Greedy {
                     //System.out.print(" valid coloring : "+ isValidColoring());
                 }
             }
-            else if (Main.factory.getGraphRepository().getChosenAlgorithm().equals(Algorithm.GREEDY))
+            else if (Main.factory.getGraphRepository().getChosenAlgorithm().equals(Algorithm.GREEDY)||(Configuration.TRAINING_MODE_ENABLED))
             {
                 Main.factory.getGraphRepository().setChromaticNumber(chrom);
                 if (Configuration.VERBOSE)
@@ -124,7 +117,7 @@ public class Greedy {
                     System.out.println("  > "+end);
                 }
             }
-
+            greedy = null;
         } catch (TimelimitExceededException e) {
             Main.factory.getGraphRepository().setUpperBound(e.getValue());
 
@@ -134,6 +127,7 @@ public class Greedy {
         }
 
         Main.factory.getGraphRepository().getWatch().terminiateIntermediateDeadline();
+
     }
     public static boolean isValidColoring()
     {

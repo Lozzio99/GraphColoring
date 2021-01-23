@@ -9,12 +9,13 @@ import java.time.Instant;
 import java.util.Random;
 
 public class BTChromaticNumber {
-    private static int MAX_ITERATIONS = 500000;
+    private final static int MAX_ITERATIONS = 500000;
     public  int [][] graph;
     public int [] route;
-    public static int [][] BESTGRAPH;
-    public static int [] BESTROUTE;
-    public static int chrom;
+    public static int [][] BEST_GRAPH;
+    public static int [] BEST_ROUTE;
+    public static int chromatic;
+    public static Instant START;
     public static double END;
 
     public BTChromaticNumber(int[][] matrix)
@@ -24,7 +25,7 @@ public class BTChromaticNumber {
 
     protected void execute() throws TimelimitExceededException {
 
-        Instant START = Instant.now();
+        START = Instant.now();
 
         this.route = new int[Main.factory.getGraphRepository().getVertexCount()];
         for (int i = 0; i< Main.factory.getGraphRepository().getVertexCount(); i++)
@@ -33,27 +34,27 @@ public class BTChromaticNumber {
         }
         // Calculate the chromatic number
         BackTracking bt = new BackTracking (this.graph);
-        chrom = bt.chromatic();
+        chromatic = bt.chromatic();
         if (Main.factory.getGraphRepository().getChosenAlgorithm().equals(Algorithm.BACKTRACKING))
         {
-            Main.factory.getGraphRepository().setChromaticNumber(chrom);
+            Main.factory.getGraphRepository().setChromaticNumber(chromatic);
         }
         END = Duration.between(START,Instant.now()).toNanos();
         if (Configuration.VERBOSE)
         {
-            System.out.print("Backtracking : "+ chrom);
+            System.out.print("Backtracking : "+ chromatic);
             //System.out.print(" valid coloring : "+ bt.isValidColoring());
             System.out.println("  "+END);
         }
         if (Configuration.TRAINING_MODE_ENABLED)
         {
-            if (  Main.factory.getGraphRepository().getBest_chromatic() == null || chrom < Main.factory.getGraphRepository().getBest_chromatic())
+            if (  Main.factory.getGraphRepository().getBest_chromatic() == null || chromatic < Main.factory.getGraphRepository().getBest_chromatic())
             {
-                Main.factory.getGraphRepository().setBest_chromatic(chrom);
+                Main.factory.getGraphRepository().setBest_chromatic(chromatic);
                 Main.factory.getGraphRepository().setBest_time(END);
                 Main.factory.getGraphRepository().setBestAlgorithm(Algorithm.BACKTRACKING);
             }
-            if (Main.factory.getGraphRepository().getBest_chromatic() == null || chrom == Main.factory.getGraphRepository().getBest_chromatic())
+            if (Main.factory.getGraphRepository().getBest_chromatic() == null || chromatic == Main.factory.getGraphRepository().getBest_chromatic())
                 if (Main.factory.getGraphRepository().getBest_time() == null || END < Main.factory.getGraphRepository().getBest_time()  )
                 {
                     Main.factory.getGraphRepository().setBest_time(END);
@@ -62,9 +63,9 @@ public class BTChromaticNumber {
         }
         else if (Main.factory.getGraphRepository().getChosenAlgorithm().equals(Algorithm.BACKTRACKING))
         {
-            Main.factory.getGraphRepository().setChromaticNumber(chrom);
+            Main.factory.getGraphRepository().setChromaticNumber(chromatic);
         }
-        if (chrom == Main.factory.getGraphRepository().getLowerBound())
+        if (chromatic == Main.factory.getGraphRepository().getLowerBound())
             return;
         int lastIteration = 0;
         int result = 0;
@@ -81,14 +82,14 @@ public class BTChromaticNumber {
             else
             {
                 int x = new Random().nextInt(Main.factory.getGraphRepository().getVertexCount());
-                Casual random = new Casual (BESTGRAPH, BESTROUTE, x);
+                Casual random = new Casual (BEST_GRAPH, BEST_ROUTE, x);
                 this.graph = random.changeMatrix();
                 this.route = random.getRoute();
                 bt = new BackTracking (this.graph);
                 result = bt.chromatic();
                 lastIteration = i;
             }
-            if (result<chrom)
+            if (result< chromatic)
             {
                 END = Duration.between(START,Instant.now()).toNanos();
                 if (Configuration.VERBOSE)
@@ -97,16 +98,16 @@ public class BTChromaticNumber {
                     //System.out.print(" valid coloring : " +bt.isValidColoring());
                     System.out.println("  > "+END);
                 }
-                chrom = result;
+                chromatic = result;
                 if (Configuration.TRAINING_MODE_ENABLED)
                 {
-                    if (  Main.factory.getGraphRepository().getBest_chromatic() == null || chrom < Main.factory.getGraphRepository().getBest_chromatic())
+                    if (  Main.factory.getGraphRepository().getBest_chromatic() == null || chromatic < Main.factory.getGraphRepository().getBest_chromatic())
                     {
-                        Main.factory.getGraphRepository().setBest_chromatic(chrom);
+                        Main.factory.getGraphRepository().setBest_chromatic(chromatic);
                         Main.factory.getGraphRepository().setBest_time(END);
                         Main.factory.getGraphRepository().setBestAlgorithm(Algorithm.BACKTRACKING);
                     }
-                    if (Main.factory.getGraphRepository().getBest_chromatic() == null || chrom == Main.factory.getGraphRepository().getBest_chromatic())
+                    if (Main.factory.getGraphRepository().getBest_chromatic() == null || chromatic == Main.factory.getGraphRepository().getBest_chromatic())
                         if (Main.factory.getGraphRepository().getBest_time() == null || END < Main.factory.getGraphRepository().getBest_time()  )
                         {
                             Main.factory.getGraphRepository().setBest_time(END);
@@ -115,18 +116,19 @@ public class BTChromaticNumber {
                 }
                 else if (Main.factory.getGraphRepository().getChosenAlgorithm().equals(Algorithm.BACKTRACKING))
                 {
-                    Main.factory.getGraphRepository().setChromaticNumber(chrom);
+                    Main.factory.getGraphRepository().setChromaticNumber(chromatic);
                 }
                 lastIteration = i;
-                BESTGRAPH = this.graph;
-                BESTROUTE = this.route;
+                BEST_GRAPH = this.graph;
+                BEST_ROUTE = this.route;
 
             }
-            if (chrom == Main.factory.getGraphRepository().getLowerBound()) {
+            if (chromatic == Main.factory.getGraphRepository().getLowerBound()) {
                 return;
             }
             if (Main.factory.getGraphRepository().getWatch().isExceeded()) {
-                throw new TimelimitExceededException(chrom);
+
+                throw new TimelimitExceededException(chromatic,END);
             }
         }
     }

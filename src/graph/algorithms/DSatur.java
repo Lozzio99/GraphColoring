@@ -17,22 +17,24 @@ public class DSatur {
     public static int count;
     public int chromaticNumber = 0;
     private int max = 0;
+    private static Instant start;
+    private static double end;
     public DSatur()
     {
+        start = Instant.now();
         count = 0;
     }
 
     public Integer chromatic() throws TimelimitExceededException {
+
         for (Integer x : doAlgorithm())
         {
             if (x> max)
                 max = x;
-
-            if (Main.factory.getGraphRepository().getWatch().isExceeded()) {
-                throw new TimelimitExceededException(max+1);
-            }
         }
-
+        if (Main.factory.getGraphRepository().getWatch().isExceeded()) {
+            throw new TimelimitExceededException(max+1,Duration.between(start,Instant.now()).toNanos());
+        }
         this.chromaticNumber = max+1;
         return this.chromaticNumber;
     }
@@ -48,7 +50,7 @@ public class DSatur {
             coloring[i] = -1;
 
             if (Main.factory.getGraphRepository().getWatch().isExceeded()) {
-                throw new TimelimitExceededException(max+1);
+                throw new TimelimitExceededException(max+1,Duration.between(start,Instant.now()).toNanos());
             }
         }
         List<Integer> withoutColor = new ArrayList<>();
@@ -57,7 +59,7 @@ public class DSatur {
             withoutColor.add(i);
 
             if (Main.factory.getGraphRepository().getWatch().isExceeded()) {
-                throw new TimelimitExceededException(max+1);
+                throw new TimelimitExceededException(max+1,Duration.between(start,Instant.now()).toNanos());
             }
         }
 
@@ -73,7 +75,7 @@ public class DSatur {
             while (resultColoring.containsKey(vertex))
             {
                 if (Main.factory.getGraphRepository().getWatch().isExceeded()) {
-                    throw new TimelimitExceededException(max+1);
+                    throw new TimelimitExceededException(max+1,Duration.between(start,Instant.now()).toNanos());
                 }
 
                 if (count >5000)
@@ -92,7 +94,7 @@ public class DSatur {
                 availableColors[j] = true;
 
                 if (Main.factory.getGraphRepository().getWatch().isExceeded()) {
-                    throw new TimelimitExceededException(max+1);
+                    throw new TimelimitExceededException(max+1,Duration.between(start,Instant.now()).toNanos());
                 }
             }
 
@@ -107,13 +109,13 @@ public class DSatur {
                 }
 
                 if (Main.factory.getGraphRepository().getWatch().isExceeded()) {
-                    throw new TimelimitExceededException(max+1);
+                    throw new TimelimitExceededException(max+1,Duration.between(start,Instant.now()).toNanos());
                 }
             }
             for (int j = 0; j < availableColors.length; j++)
             {
                 if (Main.factory.getGraphRepository().getWatch().isExceeded()) {
-                    throw new TimelimitExceededException(max+1);
+                    throw new TimelimitExceededException(max+1,Duration.between(start,Instant.now()).toNanos());
                 }
 
                 if (availableColors[j])
@@ -150,7 +152,7 @@ public class DSatur {
                         colors.add(coloring[j]);
 
                         if (Main.factory.getGraphRepository().getWatch().isExceeded()) {
-                            throw new TimelimitExceededException(max+1);
+                            throw new TimelimitExceededException(max+1,Duration.between(start,Instant.now()).toNanos());
                         }
                     }
                 }
@@ -168,7 +170,7 @@ public class DSatur {
             }
 
             if (Main.factory.getGraphRepository().getWatch().isExceeded()) {
-                throw new TimelimitExceededException(max+1);
+                throw new TimelimitExceededException(max+1,Duration.between(start,Instant.now()).toNanos());
             }
         }
         //System.out.println("Saturation = " + maxSaturation + ", vertex = " + vertexWithMaxSaturation);
@@ -178,9 +180,8 @@ public class DSatur {
     public static void calculate() {
         DSatur dSatur = new DSatur();
         try {
-            Instant start = Instant.now();
             int chrom = dSatur.chromatic();
-            double end = Duration.between(start,Instant.now()).toNanos();
+            end = Duration.between(start,Instant.now()).toNanos();
             if (Configuration.VERBOSE)
             {
                 System.out.print("Dsatur : "+ chrom);
@@ -191,9 +192,7 @@ public class DSatur {
             else if (Main.factory.getGraphRepository().getChosenAlgorithm().equals(Algorithm.DSATUR))
                 Main.factory.getGraphRepository().setChromaticNumber(chrom);
 
-        } catch (TimelimitExceededException e) {
-            Main.factory.getGraphRepository().setChromaticNumber(dSatur.max + 1);
-
+        } catch (TimelimitExceededException e ) {
             if(Configuration.isDebugging()) {
                 e.printStackTrace();
             }
@@ -208,8 +207,8 @@ public class DSatur {
             Main.factory.getGraphRepository().setBest_time(end);
             Main.factory.getGraphRepository().setBestAlgorithm(Algorithm.DSATUR);
         }
-        if (Main.factory.getGraphRepository().getBest_chromatic() == null || chrom == Main.factory.getGraphRepository().getBest_chromatic())
-            if (Main.factory.getGraphRepository().getBest_time() == null || end < Main.factory.getGraphRepository().getBest_time()  )
+        else if ((Main.factory.getGraphRepository().getBest_chromatic() == null || chrom == Main.factory.getGraphRepository().getBest_chromatic())
+                && (Main.factory.getGraphRepository().getBest_time() == null || end < Main.factory.getGraphRepository().getBest_time()  ))
             {
                 Main.factory.getGraphRepository().setBest_time(end);
                 Main.factory.getGraphRepository().setBestAlgorithm(Algorithm.DSATUR);

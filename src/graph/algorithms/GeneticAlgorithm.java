@@ -20,7 +20,8 @@ public class GeneticAlgorithm {
     private final int fitnessThreshold;
     private Random rand;
     private int colors;
-    public static Instant start ;
+    private static Instant start ;
+    private static double end;
 
     public GeneticAlgorithm() throws TimelimitExceededException
     {
@@ -53,7 +54,7 @@ public class GeneticAlgorithm {
             this.colors = getSolution(i);
 
 
-            double end = Duration.between(start,Instant.now()).toNanos();
+            end = Duration.between(start,Instant.now()).toNanos();
 
 
             if (Configuration.VERBOSE)
@@ -82,7 +83,7 @@ public class GeneticAlgorithm {
             }
             if (Main.factory.getGraphRepository().getWatch().isExceeded())
             {
-                throw new TimelimitExceededException(this.colors);
+                throw new TimelimitExceededException(this.colors,Duration.between(start,Instant.now()).toNanos());
             }
             i--;
         }
@@ -97,7 +98,7 @@ public class GeneticAlgorithm {
         {
             if (Main.factory.getGraphRepository().getWatch().isExceeded())
             {
-                throw new TimelimitExceededException(this.colors);
+                throw new TimelimitExceededException(this.colors,Duration.between(start,Instant.now()).toNanos());
             }
             population.nextGeneration();
         }
@@ -138,7 +139,7 @@ public class GeneticAlgorithm {
         private Individual[] population;
         private int generation = 0;
 
-        public Population() {
+        public Population() throws TimelimitExceededException {
             population = new Individual[populationSize];
             for (int i = 0; i < populationSize; i++) {
                 population[i] = new Individual();
@@ -146,7 +147,7 @@ public class GeneticAlgorithm {
             sort();
         }
 
-        public void nextGeneration() {
+        public void nextGeneration() throws TimelimitExceededException {
             int halfSize = populationSize / 2;
             Individual children[] = new Individual[halfSize];
             for (int i = 0; i < halfSize; i++)
@@ -203,13 +204,17 @@ public class GeneticAlgorithm {
             return new Parents(population[0], population[1]);
         }
 
-        private void sort()
-        {
+        private void sort() throws TimelimitExceededException {
             int n = populationSize;
             do {
                 int newn = 0;
                 for (int i = 1; i < n; i++) {
+
                     if (population[i - 1].getFitness() > population[i].getFitness()) {
+                        if (Main.factory.getGraphRepository().getWatch().isExceeded())
+                        {
+                            throw new TimelimitExceededException(colors,Duration.between(start,Instant.now()).toNanos());
+                        }
                         Individual temp = population[i - 1];
                         population[i - 1] = population[i];
                         population[i] = temp;
@@ -252,8 +257,7 @@ public class GeneticAlgorithm {
                 updateFitness();
             }
 
-            public void mutate()
-            {
+            public void mutate() throws TimelimitExceededException {
                 if (bestFitness() > fitnessThreshold)
                 {
                     mutate1();
@@ -264,8 +268,7 @@ public class GeneticAlgorithm {
                 }
             }
 
-            private void mutate1()
-            {
+            private void mutate1() throws TimelimitExceededException {
                 for (int v = 0; v < Main.factory.getGraphRepository().getVertexCount(); v++)
                 {
                     for (int w = 0; w< Main.factory.getGraphRepository().getVertexCount(); w++)
@@ -274,6 +277,10 @@ public class GeneticAlgorithm {
                         {
                             if (this.chromosome[v] == this.chromosome[w])
                             {
+                                if (Main.factory.getGraphRepository().getWatch().isExceeded())
+                                {
+                                    throw new TimelimitExceededException(colors,Duration.between(start,Instant.now()).toNanos());
+                                }
                                 HashSet<Integer> validColors = new HashSet<>();
                                 for (int c = 0; c < colors; c++)
                                 {

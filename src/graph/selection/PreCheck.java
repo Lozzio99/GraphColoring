@@ -117,8 +117,7 @@ public class PreCheck
                     //TODO : maximum and minimum hardcopied for prediction normalization, now are standard hardcoded ones
                     // set .normalization() to be valid also for prediction and always updated
 
-                    double [][] algorithm_guessed = new Prediction().prediction(PersonalTrainer.normalization(Main.factory.getGraphRepository().getGraphFeatures())).getMatrix();
-
+                    double [][] algorithm_guessed = new Prediction().prediction(Main.factory.getGraphRepository().getGraphFeatures()).getMatrix();
 
                     if (algorithm_guessed[0][0] > 0.5)
                         Main.factory.getGraphRepository().setChosenAlgorithm(Algorithm.GREEDY);
@@ -160,7 +159,7 @@ public class PreCheck
     {
         if (Configuration.VERBOSE)
         {
-            System.out.println(" Best Algorithm : ");
+            System.out.print(" Best Algorithm : ");
             System.out.print(Main.factory.getGraphRepository().getBestAlgorithm());
             System.out.print("   >>   " + Main.factory.getGraphRepository().getBest_chromatic());
             System.out.println("    -> "+Main.factory.getGraphRepository().getBest_time());

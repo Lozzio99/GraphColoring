@@ -29,9 +29,6 @@ public class Casual {
                 {
                     clone[k][j]=1;
                 }
-                if (Main.factory.getGraphRepository().getWatch().isExceeded()) {
-                    throw new TimelimitExceededException();
-                }
             }
         }
         //addressing the reference of the clone to the public one
@@ -59,9 +56,6 @@ public class Casual {
             int i= (int)(Math.random()*n);
             int change = i + random.nextInt(n - i);
             swap(route, i, change);
-            if (Main.factory.getGraphRepository().getWatch().isExceeded()) {
-                throw new TimelimitExceededException();
-            }
         }
     }
     /**

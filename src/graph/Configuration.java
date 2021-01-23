@@ -16,16 +16,16 @@ public class Configuration
     public static Long DEFAULT_UPPER_BOUND_TIMELIMLT = StopWatch.UPPER_BOUND_TIMELIMIT;
     public static Long DEFAULT_LOWER_BOUND_TIMELIMIT = StopWatch.LOWER_BOUND_TIMELIMIT;
     public static Long DEFAULT_CHROMATIC_NUMBER_TIMELIMILT = StopWatch.CHROMATIC_NUMBER_TIMELIMIT;
-    private static boolean ENABLE_DEBUG = false;
+    private final static boolean ENABLE_DEBUG = false;
     public static boolean VERBOSE = false;
-    public static boolean TRAINING_MODE_ENABLED = true;
-    public static String MODEL_PATH = System.getProperty("user.dir") + "/models";
-    public static boolean MLP_RESET = true;
-    public static boolean FEATURE_RESET = true;
-    public static Integer NUMBER_OF_FEATURES = 9;
-    public static Integer NUMBER_OF_HIDDEN =512;
-    public static Integer NUMBER_OF_OUTPUTS = 5 ;
-    public static Double LEARNING_CONSTANT = 0.005;
+    public final static boolean TRAINING_MODE_ENABLED = false;
+    public final static String MODEL_PATH = System.getProperty("user.dir") + "/models";
+    public final static boolean MLP_RESET = false;
+    public final static boolean FEATURE_RESET = false;
+    public final static Integer NUMBER_OF_FEATURES = 9;
+    public final static Integer NUMBER_OF_HIDDEN =512;
+    public final static Integer NUMBER_OF_OUTPUTS = 5 ;
+    public final static Double LEARNING_CONSTANT = 0.005;
     public static boolean isDebugging() {
         return ENABLE_DEBUG;
     }
